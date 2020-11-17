@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_top_margin">222dp</dimen>
+    <dimen name="bottom_margin">50dp</dimen>
+    <dimen name="top_menu_margin_top">44dp</dimen>
+    <dimen name="top_menu_height">40dp</dimen>
+</resources>
