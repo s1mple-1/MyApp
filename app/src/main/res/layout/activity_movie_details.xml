@@ -2,9 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,7 +14,8 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/header_background"
+            android:scaleType="centerCrop"
+            android:src="@drawable/header_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +23,8 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/header_background_mask"
+            android:scaleType="centerCrop"
+            android:src="@drawable/header_background_mask"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -93,7 +95,6 @@
             android:layout_height="wrap_content"
             android:text="@string/action_adventure_fantasy"
             android:textAppearance="@style/tag"
-
             app:layout_constraintBottom_toTopOf="@id/star1"
             app:layout_constraintEnd_toStartOf="@+id/guidelineCenter"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -104,7 +105,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ic_star_icon_pink"
+            android:src="@drawable/ic_star_icon_pink"
             android:gravity="center_horizontal"
             app:layout_constraintEnd_toStartOf="@id/star2"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -116,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3.25dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ic_star_icon_pink"
+            android:src="@drawable/ic_star_icon_pink"
             android:gravity="center_horizontal"
             app:layout_constraintEnd_toStartOf="@id/star3"
             app:layout_constraintStart_toEndOf="@id/star1"
@@ -128,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3.25dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ic_star_icon_pink"
+            android:src="@drawable/ic_star_icon_pink"
             android:gravity="center_horizontal"
             app:layout_constraintEnd_toStartOf="@id/star4"
             app:layout_constraintStart_toEndOf="@id/star2"
@@ -140,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3.25dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ic_star_icon_pink"
+            android:src="@drawable/ic_star_icon_pink"
             android:gravity="center_horizontal"
             app:layout_constraintStart_toEndOf="@id/star3"
             app:layout_constraintTop_toBottomOf="@id/tagLine" />
@@ -151,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3.25dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ic_star_icon_gray"
+            android:src="@drawable/ic_star_icon_gray"
             android:gravity="center_horizontal"
             app:layout_constraintStart_toEndOf="@id/star4"
             app:layout_constraintTop_toBottomOf="@id/tagLine" />
@@ -212,7 +213,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:background="@drawable/movie1"
+            android:src="@drawable/movie1"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@id/cast" />
 
@@ -221,7 +222,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:background="@drawable/movie2"
+            android:src="@drawable/movie2"
             app:layout_constraintEnd_toStartOf="@+id/imageView3"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/cast" />
@@ -231,7 +232,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:background="@drawable/movie3"
+            android:src="@drawable/movie3"
             app:layout_constraintEnd_toStartOf="@+id/imageView4"
             app:layout_constraintStart_toEndOf="@id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/cast" />
@@ -241,7 +242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:background="@drawable/movie4"
+            android:src="@drawable/movie4"
             app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@+id/cast" />
 
