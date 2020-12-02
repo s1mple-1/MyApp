@@ -1,132 +1,91 @@
 <resources>
 
     <style name="filmTitle">
-        <item name="android:textSize">
-            40sp
-        </item>
-        <item name="android:letterSpacing">
-            -0.01
-        </item>
-        <item name="android:textColor">
-            #ECECEC
-        </item>
-        <item name="android:shadowColor">
-            #80000000
-        </item>
-        <item name="android:shadowDx">
-            0
-        </item>
-        <item name="android:shadowDy">
-            6
-        </item>
-        <item name="android:shadowRadius">
-            12
-        </item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">#ECECEC</item>
+        <item name="android:shadowColor">#80000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">6</item>
+        <item name="android:shadowRadius">12</item>
     </style>
 
     <style name="age">
-        <item name="android:textSize">
-            12sp
-        </item>
-        <item name="android:textColor">
-            #FFFFFF
-        </item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="tag">
-        <item name="android:textSize">
-            14sp
-        </item>
-        <item name="android:textColor">
-            #FF3466
-        </item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FF3466</item>
     </style>
 
-    <style name="reviewers">
-        <item name="android:textSize">
-            14sp
-        </item>
-        <item name="android:textColor">
-            #6D6D80
-        </item>
+    <style name="reviews">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#6D6D80</item>
     </style>
 
-    <!-- styles.xml -->
     <style name="storyline_title">
-
-        <item name="android:textSize">
-            14sp
-        </item>
-
-        <item name="android:textColor">
-            #ECECEC
-        </item>
-
-        <item name="android:shadowColor">
-            #80000000
-        </item>
-
-        <item name="android:shadowDx">
-            0
-        </item>
-
-        <item name="android:shadowDy">
-            6
-        </item>
-
-        <item name="android:shadowRadius">
-            12
-        </item>
-
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ECECEC</item>
+        <item name="android:shadowColor">#80000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">6</item>
+        <item name="android:shadowRadius">12</item>
     </style>
 
 
     <style name="storyline">
-        <item name="android:textSize">
-            14sp
-        </item>
-        <item name="android:textColor">
-            #FFFFFF
-        </item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="heading">
-        <item name="android:textSize">
-            14sp
-        </item>
-        <item name="android:letterSpacing">
-            -0.01
-        </item>
-        <item name="android:shadowColor">
-            #80000000
-        </item>
-        <item name="android:shadowDx">
-            0
-        </item>
-        <item name="android:shadowDy">
-            6
-        </item>
-        <item name="android:shadowRadius">
-            12
-        </item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:shadowColor">#80000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">6</item>
+        <item name="android:shadowRadius">12</item>
     </style>
 
     <style name="names">
-        <item name="android:textSize">
-            12sp
-        </item>
-        <item name="android:textColor">
-            #D8D8D8
-        </item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#D8D8D8</item>
     </style>
 
     <style name="back">
-        <item name="android:textSize">
-            12sp
-        </item>
-        <item name="android:textColor">
-            #FFFFFF
-        </item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="name">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ECECEC</item>
+    </style>
+
+    <style name="min">
+        <item name="android:textSize">8sp</item>
+        <item name="android:textColor">#565665</item>
+    </style>
+
+    <style name="some_id">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="reviewers_count_main">
+        <item name="android:textSize">8sp</item>
+        <item name="android:textColor">#6D6D80</item>
+    </style>
+
+    <style name="tag_main">
+        <item name="android:textSize">8sp</item>
+        <item name="android:textColor">#FF3466</item>
+    </style>
+
+    <style name="movies_list">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

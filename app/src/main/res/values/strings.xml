@@ -1,15 +1,18 @@
 <resources>
     <string name="app_name">My App</string>
-    <string name="chris_hemsworth">Chris Hemsworth</string>
-    <string name="mark_ruffalo">Mark Ruffalo</string>
-    <string name="chris_evans">Chris Evans</string>
-    <string name="robert_downey_jr">Robert Downey Jr.</string>
+    <string name="chris_hemsworth">Chris\nHemsworth</string>
+    <string name="mark_ruffalo">Mark\nRuffalo</string>
+    <string name="chris_evans">Chris\nEvans</string>
+    <string name="robert_downey_jr">Robert\nDowney Jr.</string>
     <string name="action_adventure_fantasy">Action, Adventure, Fantasy</string>
-    <string name="avengers_end_game">Avengers: End Game</string>
+    <string name="avengers_end_game">Avengers:\nEnd Game</string>
     <string name="back">Back</string>
     <string name="age_13">13+</string>
-    <string name="_125_reviews">125 Reviews</string>
+    <string name="_125_reviews">125 REVIEWS</string>
     <string name="storyline_title">Storyline</string>
     <string name="avengers_descr">After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.</string>
     <string name="cast_title">Cast</string>
+    <string name="avengers_end_game_main">Avengers: End Game</string>
+    <string name="_137_min">137 MIN</string>
+    <string name="movies_list">Movies list</string>
 </resources>
