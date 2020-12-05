@@ -1,5 +1,6 @@
 package ru.s1mple.myapp
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,60 +9,77 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
-class MoviesDetailsFragment() : Fragment() {
+class MoviesDetailsFragment : Fragment() {
 
-    private var listener: BackListener? = null
+    private var backListener: BackListener? = null
+    private var filmId = 0
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is BackListener) {
+            backListener = context
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_movies_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<View>(R.id.back_button).apply {
-            setOnClickListener {
-                listener?.backToMain()
-            }
+        view.findViewById<View>(R.id.back_button).setOnClickListener {
+            backListener?.backToMain()
         }
 
-        val filmId = this.arguments!!.getInt("FILM_ID")
+        filmId = arguments?.getInt("KEY_FILM_ID") ?: filmId
         val film = FilmsDataSource().getFilmById(filmId)
 
-        val headerImage: ImageView = view.findViewById(R.id.film_details_header_image)
-        headerImage.setImageResource(film.filmImageDetails)
-        val ageRating: TextView = view.findViewById(R.id.age_rating_details)
-        ageRating.text = film.ageRating
-        val filmTitle: TextView = view.findViewById(R.id.film_title_details)
-        filmTitle.text = film.filmTitleDetails
-        val tagLine: TextView = view.findViewById(R.id.tag_line_details)
-        tagLine.text = film.tagLine
-        val reviewsCount: TextView = view.findViewById(R.id.reviews_count_details)
-        reviewsCount.text = film.filmReviewsCount
-        val filmDescription: TextView = view.findViewById(R.id.film_description)
-        filmDescription.text = film.filmDescription
+        view.findViewById<ImageView>(R.id.film_details_header_image).setImageResource(film.filmImageDetails)
+        view.findViewById<TextView>(R.id.age_rating_details).text = film.ageRating
+        view.findViewById<TextView>(R.id.film_title_details).text = film.filmTitleDetails
+        view.findViewById<TextView>(R.id.tag_line_details).text = film.tagLine
+        view.findViewById<TextView>(R.id.reviews_count_details).text = film.filmReviewsCount
+        view.findViewById<TextView>(R.id.film_description).text = film.filmDescription
 
-        val firstStar: ImageView = view.findViewById(R.id.star1)
-        val secondStar: ImageView = view.findViewById(R.id.star2)
-        val thirdStar: ImageView = view.findViewById(R.id.star3)
-        val fourthStar: ImageView = view.findViewById(R.id.star4)
-        val fifthStar: ImageView = view.findViewById(R.id.star5)
-        val ratingList = listOf(firstStar, secondStar, thirdStar, fourthStar, fifthStar)
-
+        val ratingList = listOf<ImageView>(
+            view.findViewById(R.id.star1),
+            view.findViewById(R.id.star2),
+            view.findViewById(R.id.star3),
+            view.findViewById(R.id.star4),
+            view.findViewById(R.id.star5)
+        )
         for (i in 0 until film.rating) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
         }
     }
 
-    fun setListener(l: BackListener) {
-        listener = l
+    override fun onDetach() {
+        super.onDetach()
+
+        backListener = null
+    }
+
+    companion object {
+        fun newInstance(filmId: Int): MoviesDetailsFragment {
+            val fragment = MoviesDetailsFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(KEY_FILM_ID, filmId)
+                }
+            }
+            return fragment
+        }
+    }
+
+    interface BackListener {
+        fun backToMain()
     }
 }
 
-interface BackListener {
-    fun backToMain()
-}
+private const val KEY_FILM_ID = "KEY_FILM_ID"

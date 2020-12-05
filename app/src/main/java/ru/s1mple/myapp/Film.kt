@@ -16,4 +16,4 @@ data class Film(
     val rating: Int,
     val filmTitleDetails: String,
     val filmDescription: String
-) {}
+)
