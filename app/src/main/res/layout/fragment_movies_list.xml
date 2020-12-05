@@ -2,35 +2,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/movies_list"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     >
 
     <LinearLayout
         android:id="@+id/top_menu"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="55dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/films_recycler"
+        >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/movies_list_icon" />
+            android:src="@drawable/ic_target" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/movies_list"
             android:textAppearance="@style/movies_list"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="@string/movies_list"
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -40,10 +43,10 @@
         android:layout_marginTop="33dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/top_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

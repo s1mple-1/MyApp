@@ -1,25 +1,19 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <ImageView
-        android:id="@+id/film_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/background_main_film"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_margin="4dp"
+    android:background="@drawable/background_main_film"
+    >
 
     <ImageView
         android:id="@+id/film_image_main"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        android:src="@mipmap/avengers_main"
+        android:adjustViewBounds="true"
+        android:layout_margin="1dp"
+        android:src="@drawable/avengers_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,8 +30,8 @@
 
     <TextView
         android:id="@+id/age_rating_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_margin="8dp"
         android:background="@drawable/age_frame"
         android:gravity="center_vertical|center_horizontal"
@@ -47,12 +41,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/like_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="@mipmap/unlike"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_unlike"
         app:layout_constraintBottom_toBottomOf="@id/age_rating_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/age_rating_main" />
@@ -137,7 +131,9 @@
         android:textAppearance="@style/name"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/film_image_main" />
+        app:layout_constraintTop_toBottomOf="@id/film_image_main"
+        app:layout_constraintBottom_toTopOf="@+id/film_duration_main"
+        />
 
     <TextView
         android:id="@+id/film_duration_main"
@@ -149,5 +145,8 @@
         android:textAppearance="@style/min"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/film_title_main" />
+        app:layout_constraintTop_toBottomOf="@id/film_title_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
