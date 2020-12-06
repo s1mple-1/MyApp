@@ -59,8 +59,11 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         val rating = film.rating
-        for (i in 0 until film.rating) {
+        for (i in 0 until rating) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
+        }
+        for (i in rating until MAX_FILM_RATING_VALUE) {
+            ratingList[i].setImageResource(R.drawable.ic_star_icon_gray)
         }
 
         ageRating.text = film.ageRating
@@ -72,6 +75,3 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 private const val MAX_FILM_RATING_VALUE = 5
-
-private val RecyclerView.ViewHolder.context
-    get() = this.itemView.context

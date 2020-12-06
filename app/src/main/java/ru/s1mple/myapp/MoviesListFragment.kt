@@ -27,9 +27,6 @@ class MoviesListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        super.onCreateView(inflater, container, savedInstanceState)
-
         return inflater.inflate(R.layout.fragment_movies_list, container, false)
     }
 

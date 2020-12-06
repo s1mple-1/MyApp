@@ -65,7 +65,6 @@ class MoviesDetailsFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.actors_recycler)
         recyclerView?.adapter = ActorsAdapter()
-        recyclerView?.layoutManager = GridLayoutManager(view.context, 1, RecyclerView.HORIZONTAL, false)
     }
 
     override fun onStart() {
@@ -78,6 +77,7 @@ class MoviesDetailsFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
 
+        recyclerView = null
         backListener = null
     }
 
