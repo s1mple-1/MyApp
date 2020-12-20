@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
-import ru.s1mple.myapp.data.Actor
 import ru.s1mple.myapp.data.Movie
 
 class MoviesDetailsFragment : BaseFragment() {
@@ -20,7 +19,15 @@ class MoviesDetailsFragment : BaseFragment() {
     private var backListener: BackListener? = null
     private var filmId = 0
     private var recyclerView : RecyclerView? = null
-    var movie : Movie? = null
+
+    private var detailsHeaderImage : ImageView? = null
+    private var ageRating : TextView? = null
+    private var filmTitle : TextView? = null
+    private var genresLine : TextView? = null
+    private var ratingList : List<ImageView>? = null
+    private var reviewsCount : TextView? = null
+    private var filmDescription : TextView? = null
+
     private var coroutineScope = createCoroutineScope()
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
@@ -53,51 +60,61 @@ class MoviesDetailsFragment : BaseFragment() {
             backListener?.backToMain()
         }
         filmId = arguments?.getInt("KEY_FILM_ID") ?: filmId
-        coroutineScope.launch(coroutineExceptionHandler) {
-            movie = dataProvider?.dataSource()?.getMovieById(filmId)?.apply {
-                setUpViews(view, this)
-                updateData(this.actors)
-            }
-        }
-        recyclerView = view.findViewById(R.id.actors_recycler)
-        recyclerView?.adapter = ActorsAdapter()
+        findViews(view)
+        updateData(filmId)
     }
 
-
-    private fun setUpViews(view: View, movie: Movie) {
-        val detailsHeaderImage = view.findViewById<ImageView>(R.id.film_details_header_image)
-
-        Picasso.get().load(movie?.backdrop).into(detailsHeaderImage)
-
-        val ageRating = movie?.minimumAge
-        view.findViewById<TextView>(R.id.age_rating_details).text = "$ageRating+"
-        view.findViewById<TextView>(R.id.film_title_details).text = movie?.title
-
-        var genres = "" //TODO сделать более нормально решение
-        for (i in movie.genres) {
-            genres = genres + " " + i.name
-        }
-        view.findViewById<TextView>(R.id.tag_line_details).text = genres
-        val reviews = movie?.numberOfRatings
-        view.findViewById<TextView>(R.id.reviews_count_details).text = "$reviews REVIEWS"
-        view.findViewById<TextView>(R.id.film_description).text = movie?.overview
-
-        val ratingList = listOf<ImageView>(
+    private fun findViews(view: View) {
+        detailsHeaderImage = view.findViewById(R.id.film_details_header_image)
+        ageRating = view.findViewById(R.id.age_rating_details)
+        filmTitle = view.findViewById(R.id.film_title_details)
+        genresLine = view.findViewById(R.id.tag_line_details)
+        reviewsCount = view.findViewById(R.id.reviews_count_details)
+        filmDescription = view.findViewById(R.id.film_description)
+        ratingList = listOf(
             view.findViewById(R.id.star1),
             view.findViewById(R.id.star2),
             view.findViewById(R.id.star3),
             view.findViewById(R.id.star4),
             view.findViewById(R.id.star5),
         )
+        recyclerView = view.findViewById(R.id.actors_recycler)
+        recyclerView?.adapter = ActorsAdapter()
+    }
 
+    private fun updateData(filmId : Int) {
+        coroutineScope.launch(coroutineExceptionHandler) {
+            dataProvider?.dataSource()?.getMovieById(filmId)?.apply {
+                updateViews(this)
+            }
+        }
+    }
 
-        val rating = (movie?.ratings?.toInt() ?: 0)/2
+    private suspend  fun updateViews(movie: Movie) = withContext(Dispatchers.Main) {
+        Picasso.get().load(movie.backdrop).into(detailsHeaderImage)
+
+        val minimumAge = movie.minimumAge
+        ageRating?.text = "$minimumAge+"
+        filmTitle?.text = movie.title
+
+        var genres = "" //TODO сделать более нормально решение
+        for (i in movie.genres) {
+            genres = genres + " " + i.name
+        }
+        genresLine?.text = genres
+        val reviews = movie.numberOfRatings
+        reviewsCount?.text = "$reviews REVIEWS"
+        filmDescription?.text = movie.overview
+
+        val rating = (movie.ratings?.toInt() ?: 0)/2
         for (i in 0 until rating) {
-            ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
+            ratingList?.get(i)?.setImageResource(R.drawable.ic_star_icon_pink)
         }
         for (i in rating until MAX_FILM_RATING_VALUE) {
-            ratingList[i].setImageResource(R.drawable.ic_star_icon_gray)
+            ratingList?.get(i)?.setImageResource(R.drawable.ic_star_icon_gray)
         }
+
+        (recyclerView?.adapter as? ActorsAdapter)?.bindActors(movie.actors)
     }
 
     override fun onDetach() {
@@ -106,11 +123,6 @@ class MoviesDetailsFragment : BaseFragment() {
         recyclerView = null
         backListener = null
         coroutineScope.cancel()
-    }
-
-
-    private fun updateData(actors : List<Actor>) {
-        (recyclerView?.adapter as? ActorsAdapter)?.bindActors(actors)
     }
 
     companion object {

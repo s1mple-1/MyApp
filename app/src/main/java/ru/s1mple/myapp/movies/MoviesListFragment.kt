@@ -67,7 +67,7 @@ class MoviesListFragment : BaseFragment() {
         }
     }
 
-    private fun updateMovies(movies : List<Movie>) {
+    private suspend fun updateMovies(movies : List<Movie>) = withContext(Dispatchers.Main) {
         (recycler?.adapter as? MoviesListAdapter)?.bindMovies(movies)
     }
 
