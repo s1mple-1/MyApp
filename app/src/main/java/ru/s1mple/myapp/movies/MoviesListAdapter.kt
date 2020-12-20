@@ -1,17 +1,21 @@
-package ru.s1mple.myapp
+package ru.s1mple.myapp.movies
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import ru.s1mple.myapp.R
+import ru.s1mple.myapp.data.Movie
 
-class FilmsListAdapter(
+class MoviesListAdapter(
     private val filmClickListener: MoviesListFragment.FilmClickListener?
 ) : RecyclerView.Adapter<FilmsViewHolder>() {
 
-    private var films = listOf<Film>()
+    private var movies : List<Movie> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmsViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -20,16 +24,17 @@ class FilmsListAdapter(
     }
 
     override fun onBindViewHolder(holder: FilmsViewHolder, position: Int) {
-        holder.onBind(films[position])
+        holder.onBind(movies[position])
         holder.itemView.setOnClickListener {
-            filmClickListener?.onClick(films[position].filmId)
+            filmClickListener?.onClick(movies[position].id)
         }
     }
 
-    override fun getItemCount(): Int = films.size
+    override fun getItemCount(): Int = movies.size
 
-    fun bindFilms(newFilms: List<Film>) {
-        films = newFilms
+    fun bindMovies(newMovie: List<Movie>) {
+        movies = newMovie
+        notifyDataSetChanged()
     }
 }
 
@@ -49,28 +54,36 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.findViewById(R.id.star5),
     )
 
-    fun onBind(film: Film) {
-        filmImageMain.setImageResource(film.filmImageMain)
-        if (film.hasLike) {
-            like.setImageResource(R.drawable.ic_like)
+    fun onBind(movie: Movie) {
 
-        } else {
-            like.setImageResource(R.drawable.ic_unlike)
-        }
+        Picasso.get().load(movie.poster).into(filmImageMain)
 
-        val rating = film.rating
+//        if (movie.hasLike) { //TODO реализация лайка
+//            like.setImageResource(R.drawable.ic_like)
+//
+//        } else {
+//            like.setImageResource(R.drawable.ic_unlike)
+//        }
+
+        val rating = (movie.ratings?.toInt() ?: 0)/2
         for (i in 0 until rating) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
         }
         for (i in rating until MAX_FILM_RATING_VALUE) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_gray)
         }
-
-        ageRating.text = film.ageRating
-        filmTitleMain.text = film.filmTitleMain
-        filmDurationMain.text = film.filmDurationMain
-        filmReviewsCount.text = film.filmReviewsCount
-        tagLine.text = film.tagLine
+        val minimumAge = movie.minimumAge
+        ageRating.text = "$minimumAge+"
+        filmTitleMain.text = movie.title
+        val duration = movie.runtime
+        filmDurationMain.text = "$duration MIN"
+        val reviews = movie.numberOfRatings
+        filmReviewsCount.text = "$reviews REVIEWS"
+        var genres = "" //TODO сделать более нормально решение
+        for (i in movie.genres) {
+            genres = genres + " " + i.name
+        }
+        tagLine.text = genres
     }
 }
 

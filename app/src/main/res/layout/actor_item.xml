@@ -9,13 +9,13 @@
 
     <ImageView
         android:id="@+id/actor_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
         android:src="@drawable/robert_downey_jr"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/actor_name_film_details"
         />
 
 

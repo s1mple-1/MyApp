@@ -2,6 +2,8 @@ package ru.s1mple.myapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ru.s1mple.myapp.details.MoviesDetailsFragment
+import ru.s1mple.myapp.movies.MoviesListFragment
 
 class MainActivity : AppCompatActivity(),
     MoviesListFragment.FilmClickListener,

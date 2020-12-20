@@ -1,4 +1,4 @@
-package ru.s1mple.myapp
+package ru.s1mple.myapp.details
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,23 +6,27 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import ru.s1mple.myapp.R
+import ru.s1mple.myapp.data.Actor
 
 class ActorsAdapter() : RecyclerView.Adapter<ActorViewHolder>() {
 
-   private var actors : List<Actor> = listOf()
+   private var actor : List<Actor> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
         return ActorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.actor_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
-        holder.onBind(actors[position])
+        holder.onBind(actor[position])
     }
 
-    override fun getItemCount(): Int = actors.size
+    override fun getItemCount(): Int = actor.size
 
-    fun bindActors(newActors : List<Actor>) {
-        actors = newActors
+    fun bindActors(newActor : List<Actor>) {
+        actor = newActor
+        notifyDataSetChanged()
     }
 }
 
@@ -31,7 +35,8 @@ class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val actorImage : ImageView = itemView.findViewById(R.id.actor_image)
 
     fun onBind(actor: Actor) {
-        actorName.text = actor.fullName
-        actorImage.setImageResource(actor.actorImage)
+        actorName.text = actor.name
+        Picasso.get().load(actor.picture)
+            .into(actorImage)
     }
 }
