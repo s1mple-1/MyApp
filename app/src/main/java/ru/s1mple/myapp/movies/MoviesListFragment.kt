@@ -1,18 +1,29 @@
-package ru.s1mple.myapp
+package ru.s1mple.myapp.movies
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
+import ru.s1mple.myapp.BaseFragment
+import ru.s1mple.myapp.R
+import ru.s1mple.myapp.data.Movie
 
-class MoviesListFragment : Fragment() {
+class MoviesListFragment : BaseFragment() {
 
     private var filmsClickListener : FilmClickListener? = null
     private var recycler: RecyclerView? = null
+    private var coroutineScope = createCoroutineScope()
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        coroutineScope = createCoroutineScope()
+    }
+
+    private fun createCoroutineScope() = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -36,13 +47,8 @@ class MoviesListFragment : Fragment() {
         recycler = view.findViewById(R.id.films_recycler)
         recycler?.apply {
             layoutManager = GridLayoutManager(context, RECYCLER_COLUMN_COUNTER)
-            adapter = FilmsListAdapter(filmsClickListener)
+            adapter = MoviesListAdapter(filmsClickListener)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
         updateData()
     }
 
@@ -51,10 +57,18 @@ class MoviesListFragment : Fragment() {
 
         filmsClickListener = null
         recycler = null
+        coroutineScope.cancel()
     }
 
     private fun updateData() {
-        (recycler?.adapter as? FilmsListAdapter)?.bindFilms(FilmsDataSource().getFilms())
+        coroutineScope.launch(coroutineExceptionHandler) {
+            val movies = dataProvider?.dataSource()?.getMovies() ?: emptyList()
+            updateMovies(movies)
+        }
+    }
+
+    private suspend fun updateMovies(movies : List<Movie>) = withContext(Dispatchers.Main) {
+        (recycler?.adapter as? MoviesListAdapter)?.bindMovies(movies)
     }
 
     interface FilmClickListener {
