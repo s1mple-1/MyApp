@@ -1,6 +1,5 @@
 package ru.s1mple.myapp.movies
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ class MoviesListAdapter(
     private val filmClickListener: MoviesListFragment.FilmClickListener?
 ) : RecyclerView.Adapter<FilmsViewHolder>() {
 
-    private var movies : List<Movie> = mutableListOf()
+    private var movies: List<Movie> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmsViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -65,7 +64,7 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 //            like.setImageResource(R.drawable.ic_unlike)
 //        }
 
-        val rating = (movie.ratings?.toInt() ?: 0)/2
+        val rating = (movie.ratings?.toInt() ?: 0) / 2
         for (i in 0 until rating) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
         }
@@ -79,10 +78,7 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         filmDurationMain.text = "$duration MIN"
         val reviews = movie.numberOfRatings
         filmReviewsCount.text = "$reviews REVIEWS"
-        var genres = "" //TODO сделать более нормально решение
-        for (i in movie.genres) {
-            genres = genres + " " + i.name
-        }
+        val genres = movie.genres.joinToString(transform = { it.name })
         tagLine.text = genres
     }
 }

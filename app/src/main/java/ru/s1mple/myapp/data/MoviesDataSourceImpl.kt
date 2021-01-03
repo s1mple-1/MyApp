@@ -1,7 +1,6 @@
 package ru.s1mple.myapp.data
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -11,7 +10,7 @@ interface MoviesDataSource {
 }
 
 class MoviesDataSourceImpl(
-    val context : Context
+    val context: Context
 ) : MoviesDataSource {
 
     override suspend fun getMovies(): List<Movie> =

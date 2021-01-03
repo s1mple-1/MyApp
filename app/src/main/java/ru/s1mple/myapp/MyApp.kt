@@ -1,22 +1,23 @@
 package ru.s1mple.myapp
 
 import android.app.Application
-import ru.s1mple.myapp.data.MoviesDataSource
+import android.content.Context
+import androidx.fragment.app.Fragment
 import ru.s1mple.myapp.data.MoviesDataSourceImpl
 
-class MyApp : Application(), IDataProvider {
+class MyApp : Application(), MyAppComponent {
 
-    private lateinit var moviesDataSource : MoviesDataSource
+    private lateinit var viewModelFactory: ViewModelFactory
 
     override fun onCreate() {
         super.onCreate()
 
-        moviesDataSource = MoviesDataSourceImpl(this)
+        viewModelFactory = ViewModelFactory(MoviesDataSourceImpl(this))
     }
 
-    override fun dataSource(): MoviesDataSource = moviesDataSource
+    override fun viewModelFactory(): ViewModelFactory = viewModelFactory
 }
 
-interface IDataProvider {
-    fun dataSource() : MoviesDataSource
-}
+fun Context.appComponent() = (applicationContext as MyApp)
+
+fun Fragment.appComponent() = requireContext().appComponent()
