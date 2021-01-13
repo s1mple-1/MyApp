@@ -20,15 +20,22 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onClick(filmId: Int) {
+    override fun onClick(mId: Long) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFrame, MoviesDetailsFragment.newInstance(filmId))
+            .add(R.id.mainFrame, MoviesDetailsFragment.newInstance(mId))
+            .addToBackStack("${MoviesDetailsFragment::class.java}")
             .commit()
     }
 
     override fun backToMain() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFrame, MoviesListFragment.newInstance())
-            .commit()
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

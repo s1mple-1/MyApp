@@ -1,5 +1,6 @@
 package ru.s1mple.myapp.details
 
+import MovieDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,18 +10,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import coil.load
 import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
 import ru.s1mple.myapp.appComponent
-import ru.s1mple.myapp.data.Movie
+import ru.s1mple.myapp.data.Actor
 
 class MoviesDetailsFragment : BaseFragment() {
 
-    private lateinit var moviesLisModel: MoviesDetailsModel
+    private lateinit var movieDetailsModel: MoviesDetailsModel
 
     private var backListener: BackListener? = null
-    private var filmId = 0
+    private var filmId : Long = 0
     private var recyclerView: RecyclerView? = null
 
     private var detailsHeaderImage: ImageView? = null
@@ -52,7 +53,7 @@ class MoviesDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setBackListener(view)
-        filmId = arguments?.getInt("KEY_FILM_ID") ?: filmId
+        filmId = arguments?.getLong("KEY_FILM_ID") ?: filmId
         setUpViews(view)
         setUpModel(filmId)
     }
@@ -81,40 +82,48 @@ class MoviesDetailsFragment : BaseFragment() {
         recyclerView?.adapter = ActorsAdapter()
     }
 
-    private fun setUpModel(mId: Int) {
-        moviesLisModel = ViewModelProvider(
+    private fun setUpModel(mId: Long) {
+        movieDetailsModel = ViewModelProvider(
             this,
             appComponent().viewModelFactory()
         ).get(MoviesDetailsModel::class.java)
-        moviesLisModel.movieLiveData.observe(this.viewLifecycleOwner) {
+        movieDetailsModel.onViewCreated(mId)
+        movieDetailsModel.movieLiveData.observe(this.viewLifecycleOwner) {
             updateViews(it)
         }
-        moviesLisModel.onViewCreated(mId)
+        movieDetailsModel.movieActorsLiveData.observe(this.viewLifecycleOwner) {
+            updateActors(it)
+        }
     }
 
-    private fun updateViews(movie: Movie) {
-        Picasso.get().load(movie.backdrop).into(detailsHeaderImage)
+    private fun updateViews(movie: MovieDetails) {
+        val backdrop = "$IMAGE_PATH${movie.backdropPath}"
 
-        val minimumAge = movie.minimumAge
-        ageRating?.text = "$minimumAge+"
+        detailsHeaderImage?.load(backdrop) {
+            error(R.drawable.avengers_main)
+        }
+
+        ageRating?.text = "${movie.getMinimumAge()}+"
         filmTitle?.text = movie.title
 
-        val genres = movie.genres.joinToString(transform = { it.name })
-
+        val genres = movie.genres.joinToString(transform = {it.name})
         genresLine?.text = genres
-        val reviews = movie.numberOfRatings
+
+        val reviews = movie.voteCount
         reviewsCount?.text = "$reviews REVIEWS"
         filmDescription?.text = movie.overview
 
-        val rating = (movie.ratings?.toInt() ?: 0) / 2
+        val rating = (movie.voteAverage.toInt()) / 2
         for (i in 0 until rating) {
             ratingList?.get(i)?.setImageResource(R.drawable.ic_star_icon_pink)
         }
         for (i in rating until MAX_FILM_RATING_VALUE) {
             ratingList?.get(i)?.setImageResource(R.drawable.ic_star_icon_gray)
         }
+    }
 
-        (recyclerView?.adapter as? ActorsAdapter)?.bindActors(movie.actors)
+    private fun updateActors(actors: List<Actor>) {
+        (recyclerView?.adapter as? ActorsAdapter)?.bindActors(actors)
     }
 
     override fun onDetach() {
@@ -125,10 +134,10 @@ class MoviesDetailsFragment : BaseFragment() {
     }
 
     companion object {
-        fun newInstance(filmId: Int): MoviesDetailsFragment {
+        fun newInstance(mId: Long): MoviesDetailsFragment {
             return MoviesDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(KEY_FILM_ID, filmId)
+                    putLong(KEY_FILM_ID, mId)
                 }
             }
         }
@@ -141,3 +150,4 @@ class MoviesDetailsFragment : BaseFragment() {
 
 private const val KEY_FILM_ID = "KEY_FILM_ID"
 private const val MAX_FILM_RATING_VALUE = 5
+private const val IMAGE_PATH = "https://image.tmdb.org/t/p/original"

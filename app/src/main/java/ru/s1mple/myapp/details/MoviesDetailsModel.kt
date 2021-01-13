@@ -1,5 +1,6 @@
 package ru.s1mple.myapp.details
 
+import MovieDetails
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.s1mple.myapp.data.Movie
+import ru.s1mple.myapp.data.Actor
 import ru.s1mple.myapp.data.MoviesDataSource
 
 class MoviesDetailsModel(
@@ -17,14 +18,18 @@ class MoviesDetailsModel(
         Log.e(this::class.java.simpleName, "Throwable : $throwable")
     }
 
-    private val mMovieLiveData = MutableLiveData<Movie>()
+    private val mMovieLiveData = MutableLiveData<MovieDetails>()
 
-    val movieLiveData: LiveData<Movie> get() = mMovieLiveData
+    val movieLiveData: LiveData<MovieDetails> get() = mMovieLiveData
 
-    fun onViewCreated(mId: Int) {
+    private val mMovieActorsLiveData = MutableLiveData<List<Actor>>()
+
+    val movieActorsLiveData: LiveData<List<Actor>> get() = mMovieActorsLiveData
+
+    fun onViewCreated(mId: Long) {
         viewModelScope.launch(coroutineExceptionHandler) {
             mMovieLiveData.value = dataSource.getMovieById(mId)
+            mMovieActorsLiveData.value = dataSource.getActorsByMovieId(mId)
         }
     }
-
 }

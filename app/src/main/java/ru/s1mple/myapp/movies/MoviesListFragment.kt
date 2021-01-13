@@ -56,10 +56,10 @@ class MoviesListFragment : BaseFragment() {
             this,
             appComponent().viewModelFactory()
         ).get(MoviesListModel::class.java)
+        moviesListModel.onViewCreated()
         moviesListModel.moviesLiveData.observe(this.viewLifecycleOwner) {
             updateMovies(it)
         }
-        moviesListModel.onViewCreated()
     }
 
     override fun onDetach() {
@@ -74,7 +74,7 @@ class MoviesListFragment : BaseFragment() {
     }
 
     interface FilmClickListener {
-        fun onClick(filmId: Int)
+        fun onClick(mId: Long)
     }
 
     companion object {
