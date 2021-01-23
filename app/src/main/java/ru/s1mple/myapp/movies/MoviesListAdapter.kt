@@ -1,21 +1,23 @@
 package ru.s1mple.myapp.movies
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import coil.load
 import ru.s1mple.myapp.R
 import ru.s1mple.myapp.data.Movie
+import ru.s1mple.myapp.data.MoviesDataSourceImpl
 
 class MoviesListAdapter(
     private val filmClickListener: MoviesListFragment.FilmClickListener?
 ) : RecyclerView.Adapter<FilmsViewHolder>() {
 
-    private var movies : List<Movie> = mutableListOf()
+    private var movies: List<Movie> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmsViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -56,7 +58,11 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun onBind(movie: Movie) {
 
-        Picasso.get().load(movie.poster).into(filmImageMain)
+        val moviePoster = "$IMAGE_PATH${movie.posterPath}"
+
+        filmImageMain.load(moviePoster) {
+            error(R.drawable.avengers_main)
+        }
 
 //        if (movie.hasLike) { //TODO реализация лайка
 //            like.setImageResource(R.drawable.ic_like)
@@ -64,27 +70,24 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 //        } else {
 //            like.setImageResource(R.drawable.ic_unlike)
 //        }
-
-        val rating = (movie.ratings?.toInt() ?: 0)/2
+        val genresList = MoviesDataSourceImpl.getGenresList()
+        val rating = (movie.voteAverage.toInt()) / 2
         for (i in 0 until rating) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
         }
         for (i in rating until MAX_FILM_RATING_VALUE) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_gray)
         }
-        val minimumAge = movie.minimumAge
-        ageRating.text = "$minimumAge+"
+        ageRating.text = "${movie.getMinimumAge()}+"
         filmTitleMain.text = movie.title
-        val duration = movie.runtime
-        filmDurationMain.text = "$duration MIN"
-        val reviews = movie.numberOfRatings
+
+        filmDurationMain.visibility = INVISIBLE
+        val reviews = movie.voteCount
         filmReviewsCount.text = "$reviews REVIEWS"
-        var genres = "" //TODO сделать более нормально решение
-        for (i in movie.genres) {
-            genres = genres + " " + i.name
-        }
-        tagLine.text = genres
+        tagLine.text =
+            genresList.filter { it.id in movie.genreIDS }.joinToString(transform = { it.name })
     }
 }
 
 private const val MAX_FILM_RATING_VALUE = 5
+private const val IMAGE_PATH = "https://image.tmdb.org/t/p/original"

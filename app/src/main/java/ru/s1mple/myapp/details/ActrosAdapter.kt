@@ -12,31 +12,35 @@ import ru.s1mple.myapp.data.Actor
 
 class ActorsAdapter() : RecyclerView.Adapter<ActorViewHolder>() {
 
-   private var actor : List<Actor> = mutableListOf()
+    private var actors: List<Actor> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
-        return ActorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.actor_item, parent, false))
+        return ActorViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.actor_item, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
-        holder.onBind(actor[position])
+        if (actors.isNotEmpty()) holder.onBind(actors[position])
     }
 
-    override fun getItemCount(): Int = actor.size
+    override fun getItemCount(): Int = actors.size
 
-    fun bindActors(newActor : List<Actor>) {
-        actor = newActor
+    fun bindActors(newActor: List<Actor>) {
+        actors = newActor
         notifyDataSetChanged()
     }
 }
 
 class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val actorName : TextView = itemView.findViewById(R.id.actor_name_film_details)
-    private val actorImage : ImageView = itemView.findViewById(R.id.actor_image)
+    private val actorName: TextView = itemView.findViewById(R.id.actor_name_film_details)
+    private val actorImage: ImageView = itemView.findViewById(R.id.actor_image)
 
     fun onBind(actor: Actor) {
-        actorName.text = actor.name
-        Picasso.get().load(actor.picture)
+        Picasso.get().load("$IMAGE_PATH${actor.profilePath}")
             .into(actorImage)
+        actorName.text = actor.name
     }
 }
+
+private const val IMAGE_PATH = "https://image.tmdb.org/t/p/original"

@@ -1,5 +1,6 @@
 package ru.s1mple.myapp.details
 
+import MovieDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,34 +8,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
-import kotlinx.coroutines.*
+import coil.load
 import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
-import ru.s1mple.myapp.data.Movie
+import ru.s1mple.myapp.appComponent
+import ru.s1mple.myapp.data.Actor
 
 class MoviesDetailsFragment : BaseFragment() {
 
+    private lateinit var movieDetailsModel: MoviesDetailsModel
+
     private var backListener: BackListener? = null
-    private var filmId = 0
-    private var recyclerView : RecyclerView? = null
+    private var filmId : Long = 0
+    private var recyclerView: RecyclerView? = null
 
-    private var detailsHeaderImage : ImageView? = null
-    private var ageRating : TextView? = null
-    private var filmTitle : TextView? = null
-    private var genresLine : TextView? = null
-    private var ratingList : List<ImageView>? = null
-    private var reviewsCount : TextView? = null
-    private var filmDescription : TextView? = null
-
-    private var coroutineScope = createCoroutineScope()
-
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
-        coroutineScope = createCoroutineScope()
-    }
-
-    private fun createCoroutineScope() = CoroutineScope(Job() + Dispatchers.Main)
+    private var detailsHeaderImage: ImageView? = null
+    private var ageRating: TextView? = null
+    private var filmTitle: TextView? = null
+    private var genresLine: TextView? = null
+    private var ratingList: List<ImageView>? = null
+    private var reviewsCount: TextView? = null
+    private var filmDescription: TextView? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,15 +52,19 @@ class MoviesDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setBackListener(view)
+        filmId = arguments?.getLong("KEY_FILM_ID") ?: filmId
+        setUpViews(view)
+        setUpModel(filmId)
+    }
+
+    private fun setBackListener(view: View) {
         view.findViewById<View>(R.id.back_button).setOnClickListener {
             backListener?.backToMain()
         }
-        filmId = arguments?.getInt("KEY_FILM_ID") ?: filmId
-        findViews(view)
-        updateData(filmId)
     }
 
-    private fun findViews(view: View) {
+    private fun setUpViews(view: View) {
         detailsHeaderImage = view.findViewById(R.id.film_details_header_image)
         ageRating = view.findViewById(R.id.age_rating_details)
         filmTitle = view.findViewById(R.id.film_title_details)
@@ -82,39 +82,48 @@ class MoviesDetailsFragment : BaseFragment() {
         recyclerView?.adapter = ActorsAdapter()
     }
 
-    private fun updateData(filmId : Int) {
-        coroutineScope.launch(coroutineExceptionHandler) {
-            dataProvider?.dataSource()?.getMovieById(filmId)?.apply {
-                updateViews(this)
-            }
+    private fun setUpModel(mId: Long) {
+        movieDetailsModel = ViewModelProvider(
+            this,
+            appComponent().viewModelFactory()
+        ).get(MoviesDetailsModel::class.java)
+        movieDetailsModel.onViewCreated(mId)
+        movieDetailsModel.movieLiveData.observe(this.viewLifecycleOwner) {
+            updateViews(it)
+        }
+        movieDetailsModel.movieActorsLiveData.observe(this.viewLifecycleOwner) {
+            updateActors(it)
         }
     }
 
-    private suspend  fun updateViews(movie: Movie) = withContext(Dispatchers.Main) {
-        Picasso.get().load(movie.backdrop).into(detailsHeaderImage)
+    private fun updateViews(movie: MovieDetails) {
+        val backdrop = "$IMAGE_PATH${movie.backdropPath}"
 
-        val minimumAge = movie.minimumAge
-        ageRating?.text = "$minimumAge+"
+        detailsHeaderImage?.load(backdrop) {
+            error(R.drawable.avengers_main)
+        }
+
+        ageRating?.text = "${movie.getMinimumAge()}+"
         filmTitle?.text = movie.title
 
-        var genres = "" //TODO сделать более нормально решение
-        for (i in movie.genres) {
-            genres = genres + " " + i.name
-        }
+        val genres = movie.genres.joinToString(transform = {it.name})
         genresLine?.text = genres
-        val reviews = movie.numberOfRatings
+
+        val reviews = movie.voteCount
         reviewsCount?.text = "$reviews REVIEWS"
         filmDescription?.text = movie.overview
 
-        val rating = (movie.ratings?.toInt() ?: 0)/2
+        val rating = (movie.voteAverage.toInt()) / 2
         for (i in 0 until rating) {
             ratingList?.get(i)?.setImageResource(R.drawable.ic_star_icon_pink)
         }
         for (i in rating until MAX_FILM_RATING_VALUE) {
             ratingList?.get(i)?.setImageResource(R.drawable.ic_star_icon_gray)
         }
+    }
 
-        (recyclerView?.adapter as? ActorsAdapter)?.bindActors(movie.actors)
+    private fun updateActors(actors: List<Actor>) {
+        (recyclerView?.adapter as? ActorsAdapter)?.bindActors(actors)
     }
 
     override fun onDetach() {
@@ -122,14 +131,13 @@ class MoviesDetailsFragment : BaseFragment() {
 
         recyclerView = null
         backListener = null
-        coroutineScope.cancel()
     }
 
     companion object {
-        fun newInstance(filmId: Int): MoviesDetailsFragment {
+        fun newInstance(mId: Long): MoviesDetailsFragment {
             return MoviesDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(KEY_FILM_ID, filmId)
+                    putLong(KEY_FILM_ID, mId)
                 }
             }
         }
@@ -142,3 +150,4 @@ class MoviesDetailsFragment : BaseFragment() {
 
 private const val KEY_FILM_ID = "KEY_FILM_ID"
 private const val MAX_FILM_RATING_VALUE = 5
+private const val IMAGE_PATH = "https://image.tmdb.org/t/p/original"

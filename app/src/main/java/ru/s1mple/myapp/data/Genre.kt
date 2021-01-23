@@ -1,3 +1,15 @@
 package ru.s1mple.myapp.data
 
-data class Genre(val id: Int, val name: String)
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Genres (
+    val genres: List<Genre>
+)
+
+@Serializable
+data class Genre (
+    val id: Long,
+    val name: String
+)
+

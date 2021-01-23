@@ -2,28 +2,23 @@ package ru.s1mple.myapp.movies
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
 import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
+import ru.s1mple.myapp.appComponent
 import ru.s1mple.myapp.data.Movie
 
 class MoviesListFragment : BaseFragment() {
 
-    private var filmsClickListener : FilmClickListener? = null
+    private lateinit var moviesListModel: MoviesListModel
+
+    private var filmsClickListener: FilmClickListener? = null
     private var recycler: RecyclerView? = null
-    private var coroutineScope = createCoroutineScope()
-
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        coroutineScope = createCoroutineScope()
-    }
-
-    private fun createCoroutineScope() = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,12 +39,27 @@ class MoviesListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpViews(view)
+        setUpViewModel()
+    }
+
+    private fun setUpViews(view: View) {
         recycler = view.findViewById(R.id.films_recycler)
         recycler?.apply {
             layoutManager = GridLayoutManager(context, RECYCLER_COLUMN_COUNTER)
             adapter = MoviesListAdapter(filmsClickListener)
         }
-        updateData()
+    }
+
+    private fun setUpViewModel() {
+        moviesListModel = ViewModelProvider(
+            this,
+            appComponent().viewModelFactory()
+        ).get(MoviesListModel::class.java)
+        moviesListModel.onViewCreated()
+        moviesListModel.moviesLiveData.observe(this.viewLifecycleOwner) {
+            updateMovies(it)
+        }
     }
 
     override fun onDetach() {
@@ -57,22 +67,14 @@ class MoviesListFragment : BaseFragment() {
 
         filmsClickListener = null
         recycler = null
-        coroutineScope.cancel()
     }
 
-    private fun updateData() {
-        coroutineScope.launch(coroutineExceptionHandler) {
-            val movies = dataProvider?.dataSource()?.getMovies() ?: emptyList()
-            updateMovies(movies)
-        }
-    }
-
-    private suspend fun updateMovies(movies : List<Movie>) = withContext(Dispatchers.Main) {
+    private fun updateMovies(movies: List<Movie>) {
         (recycler?.adapter as? MoviesListAdapter)?.bindMovies(movies)
     }
 
     interface FilmClickListener {
-        fun onClick(filmId: Int)
+        fun onClick(mId: Long)
     }
 
     companion object {
