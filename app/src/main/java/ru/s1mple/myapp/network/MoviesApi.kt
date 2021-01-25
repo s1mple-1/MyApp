@@ -1,6 +1,5 @@
 package ru.s1mple.myapp.network
 
-import MovieDetails
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -14,6 +13,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import ru.s1mple.myapp.data.ActorsData
 import ru.s1mple.myapp.data.Genres
+import ru.s1mple.myapp.data.MovieDetails
 import ru.s1mple.myapp.data.Page
 
 

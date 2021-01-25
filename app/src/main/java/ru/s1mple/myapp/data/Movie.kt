@@ -51,13 +51,16 @@ data class Movie(
 //    val releaseDate: String,
 
     val title: String,
-    val video: Boolean,
+
+//    val video: Boolean,
 
     @SerialName("vote_average")
     val voteAverage: Double,
 
     @SerialName("vote_count")
-    val voteCount: Long
+    val voteCount: Long,
+
+    var genresString : String = ""
 ) {
     fun getMinimumAge(): String = if (adult) "16" else "13"
 }
