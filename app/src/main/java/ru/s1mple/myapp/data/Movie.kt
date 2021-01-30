@@ -33,6 +33,7 @@ data class Movie(
     @SerialName("genre_ids")
     val genreIDS: List<Long>,
 
+    @SerialName("id")
     val id: Long,
 
 //    @SerialName("original_language")
@@ -41,6 +42,7 @@ data class Movie(
 //    @SerialName("original_title")
 //    val originalTitle: String,
 
+    @SerialName("overview")
     val overview: String,
 //    val popularity: Double,
 
@@ -50,6 +52,7 @@ data class Movie(
 //    @SerialName("release_date")
 //    val releaseDate: String,
 
+    @SerialName("title")
     val title: String,
 
 //    val video: Boolean,

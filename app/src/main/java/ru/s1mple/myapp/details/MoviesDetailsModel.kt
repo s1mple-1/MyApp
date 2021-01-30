@@ -18,18 +18,18 @@ class MoviesDetailsModel(
         Log.e(this::class.java.simpleName, "Throwable : $throwable")
     }
 
-    private val mMovieLiveData = MutableLiveData<MovieDetails>()
+    private val mutableMovieLiveData = MutableLiveData<MovieDetails>()
 
-    val movieLiveData: LiveData<MovieDetails> get() = mMovieLiveData
+    val movieLiveData: LiveData<MovieDetails> get() = mutableMovieLiveData
 
-    private val mMovieActorsLiveData = MutableLiveData<List<Actor>>()
+    private val mutableMovieActorsLiveData = MutableLiveData<List<Actor>>()
 
-    val movieActorsLiveData: LiveData<List<Actor>> get() = mMovieActorsLiveData
+    val movieActorsLiveData: LiveData<List<Actor>> get() = mutableMovieActorsLiveData
 
     fun onViewCreated(mId: Long) {
         viewModelScope.launch(coroutineExceptionHandler) {
-            mMovieLiveData.value = dataRepository.getMovieById(mId)
-            mMovieActorsLiveData.value = dataRepository.getActorsByMovieId(mId)
+            mutableMovieLiveData.value = dataRepository.getMovieById(mId)
+            mutableMovieActorsLiveData.value = dataRepository.getActorsByMovieId(mId)
         }
     }
 }

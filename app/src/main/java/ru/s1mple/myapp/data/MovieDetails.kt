@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MovieDetails (
+    @SerialName("adult")
     val adult: Boolean,
 
     @SerialName("backdrop_path")
@@ -14,8 +15,10 @@ data class MovieDetails (
 //    val belongsToCollection: BelongsToCollection?,
 
 //    val budget: Long,
+    @SerialName("genres")
     val genres: List<Genre>,
 //    val homepage: String,
+    @SerialName("id")
     val id: Long,
 
 //    @SerialName("imdb_id")
@@ -26,7 +29,7 @@ data class MovieDetails (
 
 //    @SerialName("original_title")
 //    val originalTitle: String,
-
+    @SerialName("overview")
     val overview: String,
 //    val popularity: Double,
 
@@ -49,8 +52,10 @@ data class MovieDetails (
 //    val spokenLanguages: List<SpokenLanguage>,
 
 //    val status: String,
+    @SerialName("tagline")
     val tagline: String,
 
+    @SerialName("title")
     val title: String,
 //    val video: Boolean,
 

@@ -17,12 +17,12 @@ class MoviesListModel(
         Log.e(this::class.java.simpleName, "Throwable : $throwable")
     }
 
-    private val mMoviesLiveData = MutableLiveData<List<Movie>>(emptyList())
-    val moviesLiveData: LiveData<List<Movie>> get() = mMoviesLiveData
+    private val mutableMoviesLiveData = MutableLiveData<List<Movie>>(emptyList())
+    val moviesLiveData: LiveData<List<Movie>> get() = mutableMoviesLiveData
 
     fun onViewCreated() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            mMoviesLiveData.value = dataRepository.getMovies()
+            mutableMoviesLiveData.value = dataRepository.getMovies()
         }
     }
 }

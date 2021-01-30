@@ -11,8 +11,7 @@ interface MoviesDataRepository {
     suspend fun getMovies(): List<Movie>
     suspend fun getMovieById(mId: Long): MovieDetails
     suspend fun getActorsByMovieId(mId: Long): List<Actor>
-    suspend fun setGenres()
-    suspend fun getGenresList(): List<Genre>
+    suspend fun loadGenres()
 }
 
 /**
@@ -23,15 +22,13 @@ class MoviesDataRepositoryImp(
 ) : MoviesDataRepository {
     private var genres = emptyList<Genre>()
 
-    override suspend fun getGenresList(): List<Genre> = genres
-
     /**
      * Сохраняет в [movies] и возвращает список фильмов
      *
      * @return список фильмов
      */
     override suspend fun getMovies(): List<Movie> = withContext(Dispatchers.IO) {
-        setGenres()
+        loadGenres()
         var movies = dataBase.movieDao.getAllFilms().map { toMovie(it) }
         if (movies.isEmpty()) {
             movies = RetrofitModule.moviesApi.loadMovies().movies.map { setMovieGenres(it) }
@@ -70,11 +67,11 @@ class MoviesDataRepositoryImp(
         }
 
     /**
-     * Возвращает список жанров
+     * Загружает список жанров если он пустой
      *
      * @return список жанров
      */
-    override suspend fun setGenres() =
+    override suspend fun loadGenres() =
         withContext(Dispatchers.IO) {
             if (genres.isEmpty()) genres = RetrofitModule.moviesApi.loadGenres().genres
         }
