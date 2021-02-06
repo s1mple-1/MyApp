@@ -8,7 +8,7 @@ import ru.s1mple.myapp.database.MoviesLocalDataBase
 import ru.s1mple.myapp.network.RetrofitModule
 
 interface MoviesDataRepository {
-    suspend fun getMovies(): List<Movie>
+    suspend fun getMovies(needRefresh: Boolean): List<Movie>
     suspend fun getMovieById(mId: Long): MovieDetails
     suspend fun getActorsByMovieId(mId: Long): List<Actor>
     suspend fun loadGenres()
@@ -25,13 +25,14 @@ class MoviesDataRepositoryImp(
     /**
      * Сохраняет в [movies] и возвращает список фильмов
      *
+     * @param needRefresh принудительная загрузка из интернета
      * @return список фильмов
      */
-    override suspend fun getMovies(): List<Movie> = withContext(Dispatchers.IO) {
+    override suspend fun getMovies(needRefresh: Boolean): List<Movie> = withContext(Dispatchers.IO) {
         loadGenres()
         var movies = dataBase.movieDao.getAllFilms().map { toMovie(it) }
-        if (movies.isEmpty()) {
-            movies = RetrofitModule.moviesApi.loadMovies().movies.map { setMovieGenres(it) }
+        if (movies.isEmpty() || needRefresh) {
+            movies = RetrofitModule.moviesApi.loadMovies().movies.map { updateMovieGenre(it) }
             dataBase.movieDao.insertAll(movies.map { toMovieEntity(it) })
         }
         movies
@@ -51,7 +52,6 @@ class MoviesDataRepositoryImp(
         }
         toMovieDetails(movieDetails)
     }
-
 
     /**
      * Возвращает список актеров фильма по id фильма
@@ -90,7 +90,12 @@ class MoviesDataRepositoryImp(
         genresString = movie.genresString
     )
 
-    private fun setMovieGenres(movie: Movie): Movie {
+    /**
+     * Устанавливает фильму строку с жанрами
+     *
+     * @param movie объект фильма
+     */
+    private fun updateMovieGenre(movie: Movie): Movie {
         movie.genresString =
             genres.filter { it.id in movie.genreIDS }.joinToString(transform = { it.name })
         return movie

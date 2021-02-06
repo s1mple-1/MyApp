@@ -3,6 +3,7 @@ package ru.s1mple.myapp
 import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
+import ru.s1mple.myapp.background.MovieUpdateWorker
 import ru.s1mple.myapp.data.MoviesDataRepository
 import ru.s1mple.myapp.data.MoviesDataRepositoryImp
 import ru.s1mple.myapp.database.MoviesLocalDataBase
@@ -17,6 +18,7 @@ class MyApp : Application(), MyAppComponent {
         super.onCreate()
         moviesDataRepository = MoviesDataRepositoryImp(MoviesLocalDataBase.createDataBase(this))
         viewModelFactory = ViewModelFactory(moviesDataRepository)
+        MovieUpdateWorker.startWork(applicationContext, moviesDataRepository)
     }
 
     override fun viewModelFactory(): ViewModelFactory = viewModelFactory
