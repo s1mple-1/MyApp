@@ -8,21 +8,21 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.s1mple.myapp.data.Movie
-import ru.s1mple.myapp.data.MoviesDataSource
+import ru.s1mple.myapp.data.MoviesDataRepository
 
 class MoviesListModel(
-    private val dataSource: MoviesDataSource
+    private val dataRepository: MoviesDataRepository
 ) : ViewModel() {
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e(this::class.java.simpleName, "Throwable : $throwable")
     }
 
-    private val mMoviesLiveData = MutableLiveData<List<Movie>>(emptyList())
-    val moviesLiveData: LiveData<List<Movie>> get() = mMoviesLiveData
+    private val mutableMoviesLiveData = MutableLiveData<List<Movie>>(emptyList())
+    val moviesLiveData: LiveData<List<Movie>> get() = mutableMoviesLiveData
 
     fun onViewCreated() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            mMoviesLiveData.value = dataSource.getMovies()
+            mutableMoviesLiveData.value = dataRepository.getMovies()
         }
     }
 }

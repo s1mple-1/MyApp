@@ -1,6 +1,5 @@
 package ru.s1mple.myapp.details
 
-import MovieDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
 import ru.s1mple.myapp.appComponent
 import ru.s1mple.myapp.data.Actor
+import ru.s1mple.myapp.data.MovieDetails
 
 class MoviesDetailsFragment : BaseFragment() {
 

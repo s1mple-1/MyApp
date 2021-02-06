@@ -2,7 +2,6 @@ package ru.s1mple.myapp.movies
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.s1mple.myapp.R
 import ru.s1mple.myapp.data.Movie
-import ru.s1mple.myapp.data.MoviesDataSourceImpl
 
 class MoviesListAdapter(
     private val filmClickListener: MoviesListFragment.FilmClickListener?
@@ -70,7 +68,6 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 //        } else {
 //            like.setImageResource(R.drawable.ic_unlike)
 //        }
-        val genresList = MoviesDataSourceImpl.getGenresList()
         val rating = (movie.voteAverage.toInt()) / 2
         for (i in 0 until rating) {
             ratingList[i].setImageResource(R.drawable.ic_star_icon_pink)
@@ -84,8 +81,7 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         filmDurationMain.visibility = INVISIBLE
         val reviews = movie.voteCount
         filmReviewsCount.text = "$reviews REVIEWS"
-        tagLine.text =
-            genresList.filter { it.id in movie.genreIDS }.joinToString(transform = { it.name })
+        tagLine.text = movie.genresString
     }
 }
 

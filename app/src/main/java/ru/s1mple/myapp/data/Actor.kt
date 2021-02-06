@@ -6,6 +6,7 @@ import kotlinx.serialization.SerialName
 @Serializable
 data class ActorsData (
     val id: Long,
+    @SerialName("cast")
     val cast: List<Actor>,
     val crew: List<Actor>
 )
@@ -19,6 +20,7 @@ data class Actor (
 //    @SerialName("known_for_department")
 //    val knownForDepartment: Department,
 
+    @SerialName("name")
     val name: String,
 
     @SerialName("original_name")
