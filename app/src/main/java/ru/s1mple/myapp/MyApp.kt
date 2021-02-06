@@ -18,7 +18,7 @@ class MyApp : Application(), MyAppComponent {
         super.onCreate()
         moviesDataRepository = MoviesDataRepositoryImp(MoviesLocalDataBase.createDataBase(this))
         viewModelFactory = ViewModelFactory(moviesDataRepository)
-        MovieUpdateWorker.startWork(applicationContext, moviesDataRepository)
+        MovieUpdateWorker.setUpRepository(moviesDataRepository)
     }
 
     override fun viewModelFactory(): ViewModelFactory = viewModelFactory

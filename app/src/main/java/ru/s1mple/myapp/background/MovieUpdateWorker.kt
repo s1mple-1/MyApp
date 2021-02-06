@@ -30,8 +30,11 @@ class MovieUpdateWorker(context: Context, params: WorkerParameters) :
                 .setConstraints(constraints)
                 .build()
 
-        fun startWork(context: Context, moviesDataRepository: MoviesDataRepository) {
+        fun setUpRepository(moviesDataRepository: MoviesDataRepository) {
             this.moviesDataRepository = moviesDataRepository
+        }
+
+        fun startWork(context: Context) {
             WorkManager.getInstance(context).enqueue(request)
         }
 

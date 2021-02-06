@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
 import ru.s1mple.myapp.appComponent
+import ru.s1mple.myapp.background.MovieUpdateWorker
 import ru.s1mple.myapp.data.Movie
 
 class MoviesListFragment : BaseFragment() {
@@ -25,6 +26,7 @@ class MoviesListFragment : BaseFragment() {
 
         if (context is FilmClickListener) {
             filmsClickListener = context
+            MovieUpdateWorker.startWork(context)
         }
     }
 
