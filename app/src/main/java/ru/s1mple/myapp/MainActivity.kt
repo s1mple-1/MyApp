@@ -1,5 +1,6 @@
 package ru.s1mple.myapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.s1mple.myapp.details.MoviesDetailsFragment
@@ -20,6 +21,12 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) handleIntent(intent)
+    }
+
+
     override fun onClick(mId: Long) {
         supportFragmentManager.beginTransaction()
             .add(R.id.mainFrame, MoviesDetailsFragment.newInstance(mId))
@@ -36,6 +43,15 @@ class MainActivity : AppCompatActivity(),
             supportFragmentManager.popBackStack()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun handleIntent(intent: Intent) {
+        when (intent.action) {
+            Intent.ACTION_VIEW -> {
+                val id = intent.data?.lastPathSegment?.toLongOrNull()
+                if (id != null) onClick(id)
+            }
         }
     }
 }

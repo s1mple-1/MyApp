@@ -22,7 +22,7 @@ class MoviesListModel(
 
     fun onViewCreated() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            mutableMoviesLiveData.value = dataRepository.getMovies(false)
+            mutableMoviesLiveData.value = dataRepository.getMovies()
         }
     }
 }

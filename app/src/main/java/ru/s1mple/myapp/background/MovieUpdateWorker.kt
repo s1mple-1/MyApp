@@ -3,14 +3,19 @@ package ru.s1mple.myapp.background
 import android.content.Context
 import androidx.work.*
 import ru.s1mple.myapp.data.MoviesDataRepository
+import ru.s1mple.myapp.notifications.Notifications
+import ru.s1mple.myapp.notifications.NotificationsImpl
 import java.util.concurrent.TimeUnit
 
 class MovieUpdateWorker(context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {
 
+    private var notifications: Notifications = NotificationsImpl(context)
+
     override suspend fun doWork(): Result {
         return try {
-            updateMoviesData()
+            notifications.initialize()
+            updateMoviesData(notifications)
             Result.success()
         } catch (e: Exception) {
             Result.failure()
@@ -38,8 +43,10 @@ class MovieUpdateWorker(context: Context, params: WorkerParameters) :
             WorkManager.getInstance(context).enqueue(request)
         }
 
-        private suspend fun updateMoviesData() {
-            moviesDataRepository.getMovies(true)
+        private suspend fun updateMoviesData(notifications: Notifications) {
+            if(moviesDataRepository.updateMovies() > 0) {
+                notifications.showNotification(moviesDataRepository.getTopRatedMovie())
+            }
         }
     }
 }
