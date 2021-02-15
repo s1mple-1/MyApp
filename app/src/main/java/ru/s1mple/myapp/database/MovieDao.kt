@@ -1,24 +1,23 @@
 package ru.s1mple.myapp.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 
 @Dao
 interface MovieDao {
 
     @Query("SELECT * FROM movies")
-    suspend fun getAllFilms() : List<MovieEntity>
+    suspend fun getAllFilms(): List<MovieEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(movies: List<MovieEntity>)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(movies: List<MovieEntity>): Int
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movieDetails: MovieDetailsEntity)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovie(movieDetails: MovieDetailsEntity): Int
 
     @Query("SELECT * FROM movieDetails WHERE id == :mId")
-    suspend fun getFilmById(mId : Long) : MovieDetailsEntity?
+    suspend fun getFilmById(mId: Long): MovieDetailsEntity?
 
+    @Query("SELECT * FROM movies ORDER BY vote_average DESC LIMIT 1")
+    suspend fun getTopRatedMovie(): MovieEntity
 }

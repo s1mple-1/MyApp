@@ -8,8 +8,10 @@ import ru.s1mple.myapp.database.MoviesLocalDataBase
 import ru.s1mple.myapp.network.RetrofitModule
 
 interface MoviesDataRepository {
-    suspend fun getMovies(needRefresh: Boolean): List<Movie>
+    suspend fun getMovies(): List<Movie>
+    suspend fun updateMovies(): Int
     suspend fun getMovieById(mId: Long): MovieDetails
+    suspend fun getTopRatedMovie(): Movie
     suspend fun getActorsByMovieId(mId: Long): List<Actor>
     suspend fun loadGenres()
 }
@@ -21,6 +23,7 @@ class MoviesDataRepositoryImp(
     private val dataBase: MoviesLocalDataBase
 ) : MoviesDataRepository {
     private var genres = emptyList<Genre>()
+    private lateinit var movies: List<Movie>
 
     /**
      * Сохраняет в [movies] и возвращает список фильмов
@@ -28,14 +31,21 @@ class MoviesDataRepositoryImp(
      * @param needRefresh принудительная загрузка из интернета
      * @return список фильмов
      */
-    override suspend fun getMovies(needRefresh: Boolean): List<Movie> = withContext(Dispatchers.IO) {
-        loadGenres()
-        var movies = dataBase.movieDao.getAllFilms().map { toMovie(it) }
-        if (movies.isEmpty() || needRefresh) {
-            movies = RetrofitModule.moviesApi.loadMovies().movies.map { updateMovieGenre(it) }
-            dataBase.movieDao.insertAll(movies.map { toMovieEntity(it) })
+    override suspend fun getMovies(): List<Movie> = withContext(Dispatchers.IO) {
+        movies = dataBase.movieDao.getAllFilms().map { toMovie(it) }
+        if (movies.isEmpty()) {
+            updateMovies()
         }
         movies
+    }
+
+    /**
+     * Запускает загрузку [genres] и принудительно обновляет [movies]
+     */
+    override suspend fun updateMovies(): Int = withContext(Dispatchers.IO) {
+        loadGenres()
+        movies = RetrofitModule.moviesApi.loadMovies().movies.map { updateMovieGenre(it) }
+        dataBase.movieDao.insertAll(movies.map { toMovieEntity(it) })
     }
 
     /**
@@ -51,6 +61,10 @@ class MoviesDataRepositoryImp(
             dataBase.movieDao.insertMovie(movieDetails)
         }
         toMovieDetails(movieDetails)
+    }
+
+    override suspend fun getTopRatedMovie(): Movie {
+        return toMovie(dataBase.movieDao.getTopRatedMovie())
     }
 
     /**
