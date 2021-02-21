@@ -13,6 +13,7 @@ import ru.s1mple.myapp.R
 import ru.s1mple.myapp.appComponent
 import ru.s1mple.myapp.background.MovieUpdateWorker
 import ru.s1mple.myapp.data.Movie
+import androidx.core.view.doOnPreDraw
 
 class MoviesListFragment : BaseFragment() {
 
@@ -35,12 +36,13 @@ class MoviesListFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        postponeEnterTransition()
         return inflater.inflate(R.layout.fragment_movies_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        view.doOnPreDraw { startPostponedEnterTransition() }
         setUpViews(view)
         setUpViewModel()
     }
@@ -76,7 +78,7 @@ class MoviesListFragment : BaseFragment() {
     }
 
     interface FilmClickListener {
-        fun onClick(mId: Long)
+        fun onClick(mId: Long, view: View?)
     }
 
     companion object {
