@@ -6,6 +6,7 @@ import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.s1mple.myapp.R
@@ -26,7 +27,7 @@ class MoviesListAdapter(
     override fun onBindViewHolder(holder: FilmsViewHolder, position: Int) {
         holder.onBind(movies[position])
         holder.itemView.setOnClickListener {
-            filmClickListener?.onClick(movies[position].id)
+            filmClickListener?.onClick(movies[position].id, holder.itemView)
         }
     }
 
@@ -55,6 +56,7 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     )
 
     fun onBind(movie: Movie) {
+        ViewCompat.setTransitionName(itemView, "film_image_main_${movie.id}")
 
         val moviePoster = "$IMAGE_PATH${movie.posterPath}"
 

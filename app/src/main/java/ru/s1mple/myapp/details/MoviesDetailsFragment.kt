@@ -1,7 +1,9 @@
 package ru.s1mple.myapp.details
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,11 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import ru.s1mple.myapp.BaseFragment
 import ru.s1mple.myapp.R
 import ru.s1mple.myapp.appComponent
@@ -21,7 +28,7 @@ class MoviesDetailsFragment : BaseFragment() {
     private lateinit var movieDetailsModel: MoviesDetailsModel
 
     private var backListener: BackListener? = null
-    private var filmId : Long = 0
+    private var filmId: Long = 0
     private var recyclerView: RecyclerView? = null
 
     private var detailsHeaderImage: ImageView? = null
@@ -40,6 +47,12 @@ class MoviesDetailsFragment : BaseFragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        postponeEnterTransition()
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +67,7 @@ class MoviesDetailsFragment : BaseFragment() {
 
         setBackListener(view)
         filmId = arguments?.getLong("KEY_FILM_ID") ?: filmId
+        detailsHeaderImage?.transitionName = "film_image_details_${filmId}"
         setUpViews(view)
         setUpModel(filmId)
     }
@@ -99,9 +113,30 @@ class MoviesDetailsFragment : BaseFragment() {
     private fun updateViews(movie: MovieDetails) {
         val backdrop = "$IMAGE_PATH${movie.backdropPath}"
 
-        detailsHeaderImage?.load(backdrop) {
-            error(R.drawable.avengers_main)
-        }
+        Glide.with(detailsHeaderImage!!).load(backdrop)
+            .addListener(object: RequestListener<Drawable> {
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    detailsHeaderImage!!.setImageDrawable(resource)
+                    return true
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return true
+                }
+            })
+            .into(detailsHeaderImage!!)
 
         ageRating?.text = "${movie.getMinimumAge()}+"
         filmTitle?.text = movie.title

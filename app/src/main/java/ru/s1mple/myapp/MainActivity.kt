@@ -2,6 +2,7 @@ package ru.s1mple.myapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import ru.s1mple.myapp.details.MoviesDetailsFragment
 import ru.s1mple.myapp.movies.MoviesListFragment
@@ -27,11 +28,19 @@ class MainActivity : AppCompatActivity(),
     }
 
 
-    override fun onClick(mId: Long) {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.mainFrame, MoviesDetailsFragment.newInstance(mId))
-            .addToBackStack("${MoviesDetailsFragment::class.java}")
-            .commit()
+    override fun onClick(mId: Long, view: View?) {
+        if (view == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.mainFrame, MoviesDetailsFragment.newInstance(mId))
+                .addToBackStack("${MoviesDetailsFragment::class.java}")
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.mainFrame, MoviesDetailsFragment.newInstance(mId))
+                .addSharedElement(view, view.transitionName)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun backToMain() {
@@ -50,7 +59,7 @@ class MainActivity : AppCompatActivity(),
         when (intent.action) {
             Intent.ACTION_VIEW -> {
                 val id = intent.data?.lastPathSegment?.toLongOrNull()
-                if (id != null) onClick(id)
+                if (id != null) onClick(id, null)
             }
         }
     }
