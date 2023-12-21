@@ -80,8 +80,7 @@ class MoviesListFragment : BaseFragment() {
     }
 
     companion object {
+        private const val RECYCLER_COLUMN_COUNTER = 2
         fun newInstance() = MoviesListFragment()
     }
 }
-
-private const val RECYCLER_COLUMN_COUNTER = 2

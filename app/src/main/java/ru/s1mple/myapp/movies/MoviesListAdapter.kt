@@ -83,7 +83,9 @@ class FilmsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         filmReviewsCount.text = "$reviews REVIEWS"
         tagLine.text = movie.genresString
     }
-}
 
-private const val MAX_FILM_RATING_VALUE = 5
-private const val IMAGE_PATH = "https://image.tmdb.org/t/p/original"
+    companion object {
+        private const val MAX_FILM_RATING_VALUE = 5
+        private const val IMAGE_PATH = "https://image.tmdb.org/t/p/original"
+    }
+}
